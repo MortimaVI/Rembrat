@@ -13,30 +13,36 @@ public class RM_Anchor : MonoBehaviour
     public enum LightingMode { RANDOM, BACKLIGHT, FRONTLIGHT }
     public LightingMode LightMode = LightingMode.RANDOM;
 
-    MeshFilter mesh = null;
-    public MeshFilter GetMesh
+    Collider col = null;
+    public Bounds GetBounds
     {
         get
         {
             if (positioningBox == null)
             {
                 Debug.LogError("Positioning box was null.");
-                return null;
+                return new Bounds();
             }
 
-            if (mesh == null)
+            if (col == null)
             {
-                mesh = positioningBox.GetComponent<MeshFilter>();
+                col = positioningBox.GetComponent<Collider>();
             }
 
-            if (mesh == null)
-                Debug.LogError("No mesh was found in positioningBox");
+            if (col == null)
+                Debug.LogError("No collider was found in positioningBox");
 
-            return mesh;
+            return col.bounds;
         }
     }
 
 
+    public void Move(Vector3 vec)
+    {
+        transform.Translate(vec);
+
+        transform.position = GetBounds.ClosestPoint(transform.position);
+    }
     private void Start()
     {
         RepositionToRandomPoint();
@@ -54,7 +60,6 @@ public class RM_Anchor : MonoBehaviour
         //If Frontlight, set the z to positive
         else if (LightMode == LightingMode.FRONTLIGHT)
         {
-
             z = Mathf.Abs(z);
         }
 
@@ -62,23 +67,19 @@ public class RM_Anchor : MonoBehaviour
     }
     public void RepositionToRandomPoint()
     {
-        if (GetMesh == null)
-        {
-            Debug.LogError("Get Mesh returned null.");
-            return;
-        }
+        Bounds bounds = GetBounds;
+        Vector3 vec = Toolbox.Range(bounds.min, bounds.max);
 
-        Vector3 vec = Toolbox.Range(GetMesh.mesh.bounds.min, GetMesh.mesh.bounds.max);
-        
-        //Lazy, hacky way to move the vector out of the bounds
-        //so the ClosestPoint function can move it back to the perimeter
-        vec *= 1000;
-
-        vec = GetMesh.mesh.bounds.ClosestPoint(vec);
-        transform.localPosition = vec;
+        Debug.Log("Setting to closest point");
+        vec = bounds.ClosestPoint(vec);
+        transform.position = vec;
 
         ValidatePosition();
     }
 
+    private void FixedUpdate()
+    {
+
+    }
 
 }

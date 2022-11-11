@@ -39,5 +39,7 @@ public class RM_ModelList : MonoBehaviour
         foreach (Transform t in modelRoot.transform)
             if (t != activeModel.transform)
                 t.gameObject.SetActive(false);
+
+        RM_RotationWidget.SetTarget(activeModel);
     }
 }

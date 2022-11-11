@@ -9,6 +9,7 @@ public class RM_Manager : MonoBehaviour
     public RM_Anchor lightAnchor;
     public RM_ModelAnchor modelAnchor;
     public RM_ModelList modelManager;
+    public RM_LightWidget lightWidget;
 
     public bool randomizeOnStart = true;
 
