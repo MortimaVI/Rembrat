@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class RM_CameraControl : MonoBehaviour
 {
+    public Slider slider;
+    public float scrollSensitivity = 1.0F;
 
     public Camera GetCamera
     {
@@ -21,5 +23,33 @@ public class RM_CameraControl : MonoBehaviour
     public void ChangeFieldOfView(Slider s)
     {
         GetCamera.fieldOfView = s.value;
+    }
+
+    public void ChangeFieldOfView(float value)
+    {
+        GetCamera.fieldOfView += value;
+        if (slider != null)
+            slider.value = GetCamera.fieldOfView;
+    }
+
+    private void Update()
+    {
+        OnScrollButton();
+    }
+
+    public void OnScrollButton()
+    {
+
+        float scroll =
+        Input.mouseScrollDelta.y;
+        if(scroll != 0)
+        Debug.Log(Input.mouseScrollDelta);
+
+        scroll *= scrollSensitivity;
+
+        if (scroll != 0)
+        {
+            ChangeFieldOfView(scroll);
+        }
     }
 }

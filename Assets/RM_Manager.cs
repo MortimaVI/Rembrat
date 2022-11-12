@@ -50,10 +50,10 @@ public class RM_Manager : MonoBehaviour
         _instance = this;
 
         if(randomizeOnStart)
-            RandomizeStart();
+            RandomizeAll();
     }
 
-    void RandomizeStart()
+    public void RandomizeAll()
     {
         cameraAnchor.RepositionToRandomPoint();
         lightAnchor.RepositionToRandomPoint();
